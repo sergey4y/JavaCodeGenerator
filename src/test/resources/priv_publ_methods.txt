@@ -1,0 +1,5 @@
+Person
++getName(id:int, flag:boolean):String
+
+Plant
+-water(volume:double):void

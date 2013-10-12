@@ -1,0 +1,6 @@
+Person
++name:String
+
+Town
+-key:boolean
++river:long

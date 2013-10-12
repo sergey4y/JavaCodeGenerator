@@ -1,0 +1,6 @@
+Bread
+#taste:int
+mass:float
+
+Water
+#density:double
