@@ -10,13 +10,15 @@ public class FieldToGen {
 	private String name;
 	private String type;
 	private AM accessModifier;
+	private boolean isStatic;
 	
 	public FieldToGen(){
 		
 	}
 	
-	public FieldToGen(AM _accessModifier, String _type, String _name){
+	public FieldToGen(AM _accessModifier, boolean _isStatic, String _type, String _name){
 		this.accessModifier = _accessModifier;
+		this.isStatic = _isStatic;
 		this.type = _type;
 		this.name = _name;
 	}
@@ -43,5 +45,13 @@ public class FieldToGen {
 
 	public void setAccessModifier(AM accessModifier) {
 		this.accessModifier = accessModifier;
+	}
+	
+	public boolean isStatic() {
+		return isStatic;
+	}
+
+	public void setStatic(boolean isStatic) {
+		this.isStatic = isStatic;
 	}
 }

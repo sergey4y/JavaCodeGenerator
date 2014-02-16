@@ -5,13 +5,15 @@ public class MethodToGen {
 	private String returnType;
 	private ParamToGen[] params;
 	private AM accessModifier;
+	private boolean isStatic;
 	
 	public MethodToGen(){
 		
 	}
 	
-	public MethodToGen(AM _accessModifier, String _returnType, String _name, String... _params){
+	public MethodToGen(AM _accessModifier, boolean _isStatic, String _returnType, String _name, String... _params){
 		this.accessModifier = _accessModifier;
+		this.isStatic = _isStatic;
 		this.returnType = _returnType;
 		this.name = _name;
 		ParamToGen[] aParams = new ParamToGen[_params.length/2];
@@ -53,6 +55,14 @@ public class MethodToGen {
 
 	public void setAccessModifier(AM accessModifier) {
 		this.accessModifier = accessModifier;
+	}
+
+	public boolean isStatic() {
+		return isStatic;
+	}
+
+	public void setStatic(boolean isStatic) {
+		this.isStatic = isStatic;
 	}
 	
 }

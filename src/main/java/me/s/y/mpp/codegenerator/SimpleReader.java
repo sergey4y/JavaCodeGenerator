@@ -23,6 +23,7 @@ public class SimpleReader {
 			boolean classTitle = true;
 			List<ClassToGen> classesToGen = new ArrayList<ClassToGen>();
 			ClassToGen currClass = null;
+			boolean isStatic = false;
 			while((line = br.readLine()) != null){
 				if(line.trim().isEmpty()){
 					classTitle = true;
@@ -36,6 +37,10 @@ public class SimpleReader {
 					currClass.setName(line.trim());
 					classTitle = false;
 				} else{
+					if(line.contains(" " + CodeGenerator.STATIC)){
+						isStatic = true;
+						line = line.replace(" " + CodeGenerator.STATIC, "");
+					} 
 					if(line.contains("(")){
 						MethodToGen method = new MethodToGen();
 						if(line.startsWith("+")){
@@ -50,6 +55,7 @@ public class SimpleReader {
 						} else {
 							method.setAccessModifier(AM.EMPT);
 						}
+						method.setStatic(isStatic);
 						String[] a = line.split("\\(");
 						if(a.length != 2){
 							continue;
@@ -61,7 +67,7 @@ public class SimpleReader {
 						}
 						method.setReturnType(b[1].replaceAll(":", "").trim());
 						String[] rawParams = b[0].split(",");
-						ParamToGen[] params = new ParamToGen[rawParams.length];
+						List<ParamToGen> params = new ArrayList<ParamToGen>();
 						for(int i=0; i<rawParams.length; i++){
 							String[] parts = rawParams[i].split(":");
 							if(parts.length < 2){
@@ -69,11 +75,12 @@ public class SimpleReader {
 							}
 							String paramName = parts[0].trim();
 							String paramType = parts[1].trim();
-							params[i] = new ParamToGen();
-							params[i].setType(paramType);
-							params[i].setName(paramName);
+							ParamToGen newParam = new ParamToGen();
+							newParam.setType(paramType);
+							newParam.setName(paramName);
+							params.add(newParam);
 						}
-						method.setParams(params);
+						method.setParams(params.toArray(new ParamToGen[params.size()]));
 						currClass.addMethod(method);
 					} else {
 						FieldToGen field = new FieldToGen();
@@ -89,6 +96,7 @@ public class SimpleReader {
 						} else {
 							field.setAccessModifier(AM.EMPT);
 						}
+						field.setStatic(isStatic);
 						String[] parts = line.split(":");
 						if(parts.length < 2){
 							continue;
@@ -105,6 +113,26 @@ public class SimpleReader {
 				classesToGen.add(currClass);
 			}
 			return classesToGen;
+		} finally {
+			if(br != null){
+				try{
+					br.close();
+				} catch (Throwable t){}
+			}
+		}
+	}
+	
+	public static String readToString(String fileName) throws IOException{
+		BufferedReader br = null;
+		StringBuffer sb = new StringBuffer();
+		try{
+			br = new BufferedReader(new FileReader(new File(fileName)));
+			String line = null;
+			while((line = br.readLine()) != null){
+				sb.append(line);
+				sb.append(System.lineSeparator());
+			}
+			return sb.toString();
 		} finally {
 			if(br != null){
 				try{

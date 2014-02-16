@@ -18,16 +18,23 @@ public class CodeGenerator {
 				} else {
 					result.append(getIndent() + fieldToGen.getAccessModifier() + " ");
 				}
+				if(fieldToGen.isStatic()){
+					result.append(STATIC + " ");
+				}
 				result.append(fieldToGen.getType() + " " + fieldToGen.getName() + ";" + getLineEnd());
 			}
 		}
 		if(classToGen.getMethods() != null){
 			for(MethodToGen methodToGen : classToGen.getMethods()){
 				if(methodToGen.getAccessModifier() == AM.EMPT){
-					result.append(getIndent() + methodToGen.getReturnType());
+					result.append(getIndent());
 				} else {
-					result.append(getIndent() + methodToGen.getAccessModifier() + " " + methodToGen.getReturnType());
+					result.append(getIndent() + methodToGen.getAccessModifier() + " ");
 				}
+				if(methodToGen.isStatic()){
+					result.append(STATIC + " ");
+				}
+				result.append(methodToGen.getReturnType());
 				result.append(" " + methodToGen.getName() + "(");
 				for(ParamToGen param : methodToGen.getParams()){
 					result.append(param.getType() + " " + param.getName() + ", ");
@@ -35,7 +42,12 @@ public class CodeGenerator {
 				if(result.toString().endsWith(", ")){
 					result.delete(result.length() - 2, result.length());
 				}
-				result.append("){}" + getLineEnd());
+				String returnStatement = "";
+				if(!methodToGen.getReturnType().equals(TypeUtils.VOID_TYPE)){
+					returnStatement = "return " + TypeUtils.getDefaultReturnValue(methodToGen.getReturnType()) +
+							";";
+				}
+				result.append("){" + returnStatement + "}" + getLineEnd());
 			}
 		}
 		result.append("}");
@@ -58,8 +70,9 @@ public class CodeGenerator {
 		CodeGenerator.indent = indent;
 	}
 
-	private static String lineEnd = "\r\n";
+	private static String lineEnd = System.lineSeparator(); //"\r\n";
 	private static String indent = "	";
 	
 	public static final String CLASS = "class";
+	public static final String STATIC = "static";
 }

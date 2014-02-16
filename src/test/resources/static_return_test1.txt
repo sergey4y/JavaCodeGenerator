@@ -1,0 +1,4 @@
+Home
++getDoorSize(id:int, flag:boolean):double
++getCount():int static
+-curCount:int static

@@ -1,4 +1,0 @@
- - add methods generation
- - add static fields and methods
- - add return statements with 0 or null
- - write documentation for incoming text file format
